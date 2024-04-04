@@ -1,5 +1,6 @@
 package com.practica.jpa.jpa.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class Ship {
     private Integer tieNumber;
     private BigDecimal feed;
     @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
     private List<Trip> trips;
     @ManyToOne
     @JoinColumn(name = "id_owner", nullable = false)

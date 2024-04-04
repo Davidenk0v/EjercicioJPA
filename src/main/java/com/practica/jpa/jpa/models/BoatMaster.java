@@ -1,5 +1,6 @@
 package com.practica.jpa.jpa.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,5 +21,6 @@ public class BoatMaster {
     private String firstName;
     private String lastName;
     @OneToMany(mappedBy = "boatMaster", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
     private List<Trip> trips;
 }

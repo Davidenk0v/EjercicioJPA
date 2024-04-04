@@ -1,26 +1,20 @@
-package com.practica.jpa.jpa.models;
+package com.practica.jpa.jpa.controllers.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import com.practica.jpa.jpa.models.Ship;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "member")
-public class Member {
+@Data
+public class MemberDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnore
-    private Set<Ship> ships;
-
+    private Set<Ship> ships = new HashSet<>();
     public Long getId() {
         return id;
     }
@@ -52,4 +46,5 @@ public class Member {
     public void setShips(Set<Ship> ships) {
         this.ships = ships;
     }
+
 }
