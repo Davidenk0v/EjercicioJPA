@@ -1,45 +1,35 @@
-package com.practica.jpa.jpa.models;
+package com.practica.jpa.jpa.models.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import com.practica.jpa.jpa.models.Member;
+import com.practica.jpa.jpa.models.Trip;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Data
+public class ShipDTO {
 
-@Entity
-@Table(name = "ship")
-public class Ship {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String registration;
     private String name;
     private Integer tieNumber;
     private BigDecimal feed;
-    @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnore
-    private List<Trip> trips;
-    @ManyToOne
-    @JoinColumn(name = "id_owner", nullable = false)
+    private List<Trip> trip;
     private Member owner;
 
-    public Ship() {
+    public ShipDTO() {
     }
 
-    public Ship(Long id, String registration, String name, Integer tieNumber, BigDecimal feed, List<Trip> trips, Member owner) {
+    public ShipDTO(Long id, String registration, String name, Integer tieNumber, BigDecimal feed, List<Trip> trip, Member owner) {
         this.id = id;
         this.registration = registration;
         this.name = name;
         this.tieNumber = tieNumber;
         this.feed = feed;
-        this.trips = trips;
+        this.trip = trip;
         this.owner = owner;
     }
-
-
 
     public Long getId() {
         return id;
@@ -81,12 +71,12 @@ public class Ship {
         this.feed = feed;
     }
 
-    public List<Trip> getTrips() {
-        return trips;
+    public List<Trip> getTrip() {
+        return trip;
     }
 
-    public void setTrips(List<Trip> trips) {
-        this.trips = trips;
+    public void setTrip(List<Trip> trip) {
+        this.trip = trip;
     }
 
     public Member getOwner() {

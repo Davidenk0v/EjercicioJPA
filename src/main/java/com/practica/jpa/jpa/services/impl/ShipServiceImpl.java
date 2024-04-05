@@ -2,7 +2,6 @@ package com.practica.jpa.jpa.services.impl;
 
 import com.practica.jpa.jpa.models.Ship;
 import com.practica.jpa.jpa.persistence.ShipDAO;
-import com.practica.jpa.jpa.repositories.ShipRepository;
 import com.practica.jpa.jpa.services.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,13 +27,13 @@ public class ShipServiceImpl implements ShipService {
     }
 
     @Override
-    public Optional<Ship> findByTieNum(Long tieNum) {
+    public Optional<Ship> findByTieNum(Integer tieNum) {
         return shipDAO.findByTieNum(tieNum);
     }
 
     @Override
     public Set<Ship> filterByTiePrice(BigDecimal lower, BigDecimal higher) {
-        return shipDAO.filterByTiePrice(lower, higher);
+        return shipDAO.filterByFeedPrice(lower, higher);
     }
 
     @Override

@@ -1,28 +1,23 @@
-package com.practica.jpa.jpa.models;
+package com.practica.jpa.jpa.models.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import com.practica.jpa.jpa.models.Trip;
 import lombok.*;
 
 import java.util.List;
 
-@Entity
-@Table(name = "boat_master")
-public class BoatMaster {
+@Data
+public class BoatMasterDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
     private String firstName;
     private String lastName;
-    @OneToMany(mappedBy = "boatMaster", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnore
     private List<Trip> trips;
 
-    public BoatMaster() {
+    public BoatMasterDTO() {
     }
 
-    public BoatMaster(Long id, String firstName, String lastName, List<Trip> trips) {
+    public BoatMasterDTO(Long id, String firstName, String lastName, List<Trip> trips) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

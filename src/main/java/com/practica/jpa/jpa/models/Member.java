@@ -6,8 +6,6 @@ import lombok.*;
 
 import java.util.Set;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "member")
 public class Member {
@@ -20,6 +18,16 @@ public class Member {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private Set<Ship> ships;
+
+    public Member() {
+    }
+
+    public Member(Long id, String firstName, String lastName, Set<Ship> ships) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.ships = ships;
+    }
 
     public Long getId() {
         return id;

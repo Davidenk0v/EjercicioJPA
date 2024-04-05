@@ -10,7 +10,7 @@ import java.util.Set;
 public interface ShipService {
     List<Ship> findAll();
     Optional<Ship> findById(Long id);
-    Optional<Ship> findByTieNum(Long tieNum);
+    Optional<Ship> findByTieNum(Integer tieNum);
     Set<Ship> filterByTiePrice(BigDecimal lower, BigDecimal higher);
     Set<Ship> findByTrip(Long idTrip);
     Set<Ship> findByOwner(Long idOwner);

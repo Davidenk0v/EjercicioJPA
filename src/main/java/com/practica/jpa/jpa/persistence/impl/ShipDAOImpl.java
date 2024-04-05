@@ -27,13 +27,13 @@ public class ShipDAOImpl implements ShipDAO {
     }
 
     @Override
-    public Optional<Ship> findByTieNum(Long tieNum) {
+    public Optional<Ship> findByTieNum(Integer tieNum) {
         return shipRepository.findByTiemNum(tieNum);
     }
 
     @Override
-    public Set<Ship> filterByTiePrice(BigDecimal lower, BigDecimal higher) {
-        return shipRepository.filterByTiePrice(lower, higher);
+    public Set<Ship> filterByFeedPrice(BigDecimal lower, BigDecimal higher) {
+        return shipRepository.filterByFeedPrice(lower, higher);
     }
 
     @Override

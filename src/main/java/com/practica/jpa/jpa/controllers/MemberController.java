@@ -1,7 +1,7 @@
 package com.practica.jpa.jpa.controllers;
 
 import com.practica.jpa.jpa.Mapper;
-import com.practica.jpa.jpa.controllers.dto.MemberDTO;
+import com.practica.jpa.jpa.models.dto.MemberDTO;
 import com.practica.jpa.jpa.models.Member;
 import com.practica.jpa.jpa.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,65 +12,65 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
+import static com.practica.jpa.jpa.Mapper.memberToDTO;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/members")
 public class MemberController {
 
     @Autowired
     private MemberService service;
 
-    @GetMapping("/members")
+    @GetMapping("/")
     public ResponseEntity<?> getAllMembers(){
         List<Member> members = service.findAll();
         if(members.isEmpty()){
-            return new ResponseEntity<>("Users not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Members not found", HttpStatus.NOT_FOUND);
         }
 
         members.stream()
-                .map(member -> Mapper.memberToDTO(member))
+                .map(Mapper::memberToDTO)
                 .toList();
 
         return new ResponseEntity<>(members, HttpStatus.OK);
     }
 
 
-    @GetMapping("/members/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id){
         Optional<Member> optionalMember = service.findById(id);
 
         if(optionalMember.isPresent()){
             Member member = optionalMember.get();
 
-            MemberDTO memberDTO = Mapper.memberToDTO(member);
+            MemberDTO memberDTO = memberToDTO(member);
 
             return new ResponseEntity<>(memberDTO, HttpStatus.OK);
         }
         return new ResponseEntity<>("Member does not exist.", HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/members/ship/{id}")
+    @GetMapping("/ship/{shipId}")
     public ResponseEntity<?> getByShip(@PathVariable Long shipId){
         Optional<Member> optionalMember = service.findByShip(shipId);
 
         if(optionalMember.isPresent()){
             Member member = optionalMember.get();
 
-            MemberDTO memberDTO = Mapper.memberToDTO(member);
+            MemberDTO memberDTO = memberToDTO(member);
 
             return new ResponseEntity<>(memberDTO, HttpStatus.OK);
         }
         return new ResponseEntity<>("Member does not exist.", HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/members")
-    public ResponseEntity<String> saveMember(@RequestBody Member member){
+    @PostMapping("/")
+    public ResponseEntity<String> addMember(@RequestBody Member member){
         service.save(member);
         return new ResponseEntity<>("Member added successfully", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/members/{id}")
+    @DeleteMapping("/{id}")
 
     public ResponseEntity<String> deleteMember(@PathVariable Long id){
         Optional<Member> optionalMember = service.findById(id);

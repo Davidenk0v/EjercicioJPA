@@ -1,28 +1,25 @@
-package com.practica.jpa.jpa.models;
+package com.practica.jpa.jpa.models.dto;
 
+import com.practica.jpa.jpa.models.BoatMaster;
+import com.practica.jpa.jpa.models.Ship;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
-@Entity
-@Table(name = "trip")
-public class Trip {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Data
+public class TripDTO {
+
     private Long id;
     private Date date;
     private String destination;
-    @ManyToOne
-    @JoinColumn(name = "id_ship", nullable = false)
     private Ship ship;
-    @ManyToOne
-    @JoinColumn(name = "id_boat_master", nullable = false)
     private BoatMaster boatMaster;
 
-    public Trip() {
+    public TripDTO() {
     }
 
-    public Trip(Long id, Date date, String destination, Ship ship, BoatMaster boatMaster) {
+    public TripDTO(Long id, Date date, String destination, Ship ship, BoatMaster boatMaster) {
         this.id = id;
         this.date = date;
         this.destination = destination;

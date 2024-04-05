@@ -1,4 +1,4 @@
-package com.practica.jpa.jpa.controllers.dto;
+package com.practica.jpa.jpa.models.dto;
 
 import com.practica.jpa.jpa.models.Ship;
 import lombok.*;
@@ -6,8 +6,6 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 public class MemberDTO {
 
@@ -15,6 +13,17 @@ public class MemberDTO {
     private String firstName;
     private String lastName;
     private Set<Ship> ships = new HashSet<>();
+
+    public MemberDTO() {
+    }
+
+    public MemberDTO(Long id, String firstName, String lastName, Set<Ship> ships) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.ships = ships;
+    }
+
     public Long getId() {
         return id;
     }

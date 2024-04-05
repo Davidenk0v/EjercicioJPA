@@ -2,12 +2,11 @@ package com.practica.jpa.jpa.services.impl;
 
 import com.practica.jpa.jpa.models.Trip;
 import com.practica.jpa.jpa.persistence.TripDAO;
-import com.practica.jpa.jpa.repositories.TripRepository;
 import com.practica.jpa.jpa.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
