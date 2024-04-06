@@ -19,7 +19,7 @@ public class Ship {
     private String name;
     private Integer tieNumber;
     private BigDecimal feed;
-    @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Trip> trips;
     @ManyToOne

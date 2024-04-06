@@ -10,7 +10,7 @@ import java.util.Set;
 public interface TripDAO {
     List<Trip> findAll();
     Optional<Trip> findById(Long id);
-    Set<Trip> findByDestination(Long idDestination);
+    Set<Trip> findByDestination(String destination);
     Set<Trip> findByMaster(Long masterId);
     Set<Trip> findByDate(Date date1, Date date2);
     void save(Trip trip);

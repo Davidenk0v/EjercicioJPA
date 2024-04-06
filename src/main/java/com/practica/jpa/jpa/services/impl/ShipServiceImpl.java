@@ -1,9 +1,12 @@
 package com.practica.jpa.jpa.services.impl;
 
 import com.practica.jpa.jpa.models.Ship;
+import com.practica.jpa.jpa.models.dto.ShipDTO;
 import com.practica.jpa.jpa.persistence.ShipDAO;
 import com.practica.jpa.jpa.services.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -44,6 +47,25 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public Set<Ship> findByOwner(Long idOwner) {
         return shipDAO.findByOwner(idOwner);
+    }
+
+    @Override
+    public ResponseEntity<String> update(Long id, ShipDTO shipDto) {
+        Optional<Ship> shipOptional = shipDAO.findById(id);
+
+        if(shipOptional.isPresent()){
+            Ship ship = shipOptional.get();
+            ship.setName(shipDto.getName());
+            ship.setRegistration(shipDto.getRegistration());
+            ship.setTieNumber(shipDto.getTieNumber());
+            ship.setFeed(shipDto.getFeed());
+            ship.setTrips(shipDto.getTrip());
+            ship.setOwner(shipDto.getOwner());
+
+            shipDAO.save(ship);
+            return new ResponseEntity<>("ship successfully updated", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Ship does not exists!", HttpStatus.BAD_REQUEST);
     }
 
     @Override

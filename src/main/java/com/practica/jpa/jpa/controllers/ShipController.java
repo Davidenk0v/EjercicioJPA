@@ -3,6 +3,7 @@ package com.practica.jpa.jpa.controllers;
 import com.practica.jpa.jpa.Mapper;
 import com.practica.jpa.jpa.models.dto.ShipDTO;
 import com.practica.jpa.jpa.models.Ship;
+import com.practica.jpa.jpa.persistence.ShipDAO;
 import com.practica.jpa.jpa.services.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,8 @@ public class ShipController {
     @Autowired
     private ShipService service;
 
+
+    //GETS
     @GetMapping("/")
     public ResponseEntity<?> getAllShips(){
         List<Ship> ships = service.findAll();
@@ -76,6 +79,28 @@ public class ShipController {
         return new ResponseEntity<>(ships, HttpStatus.OK);
     }
 
+    @GetMapping("/owner/{idOwner}")
+    public ResponseEntity<?> findByOwner(@PathVariable Long idOwner){
+        Set<Ship> ships = service.findByOwner(idOwner);
+        if(ships.isEmpty()){
+            return new ResponseEntity<>("No ships were found for this member", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(ships, HttpStatus.OK);
+    }
+
+    @GetMapping("/trip/{idTrip}")
+    public ResponseEntity<?> findByTrip(@PathVariable Long idTrip){
+        Set<Ship> ships = service.findByOwner(idTrip);
+        if(ships.isEmpty()){
+            return new ResponseEntity<>("No ships were found for this destination", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(ships, HttpStatus.OK);
+    }
+
+
+    //POSTS
 
     @PostMapping("/")
     public ResponseEntity<String> addShip(@RequestBody Ship ship){
@@ -83,6 +108,12 @@ public class ShipController {
         return new ResponseEntity<>("Ship added successfully", HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody ShipDTO shipDTO){
+        return service.update(id, shipDTO);
+    }
+
+    //DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteShip(@PathVariable Long id){
         Optional<Ship> optionalShip = service.findById(id);

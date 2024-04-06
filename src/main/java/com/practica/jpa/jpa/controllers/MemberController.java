@@ -70,8 +70,12 @@ public class MemberController {
         return new ResponseEntity<>("Member added successfully", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateMember(@PathVariable Long id, @RequestBody MemberDTO memberDTO){
+        return service.update(id, memberDTO);
+    }
 
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteMember(@PathVariable Long id){
         Optional<Member> optionalMember = service.findById(id);
 

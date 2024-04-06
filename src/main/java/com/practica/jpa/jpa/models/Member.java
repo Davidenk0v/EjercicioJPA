@@ -15,7 +15,7 @@ public class Member {
     private Long id;
     private String firstName;
     private String lastName;
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Ship> ships;
 

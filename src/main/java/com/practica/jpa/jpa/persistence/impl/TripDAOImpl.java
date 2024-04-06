@@ -27,8 +27,8 @@ public class TripDAOImpl implements TripDAO {
     }
 
     @Override
-    public Set<Trip> findByDestination(Long idDestination) {
-        return repository.findByDestination(idDestination);
+    public Set<Trip> findByDestination(String destination) {
+        return repository.findByDestination(destination);
     }
 
     @Override

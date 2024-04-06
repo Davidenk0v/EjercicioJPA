@@ -1,11 +1,15 @@
 package com.practica.jpa.jpa.services.impl;
 
+import com.practica.jpa.jpa.Mapper;
 import com.practica.jpa.jpa.models.Trip;
 import com.practica.jpa.jpa.persistence.TripDAO;
 import com.practica.jpa.jpa.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +31,8 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public Set<Trip> findByDestination(Long idDestination) {
-        return tripDAO.findByDestination(idDestination);
+    public Set<Trip> findByDestination(String destination) {
+        return tripDAO.findByDestination(destination);
     }
 
     @Override
@@ -37,8 +41,17 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public Set<Trip> findByDate(Date date1, Date date2) {
-        return tripDAO.findByDate(date1, date2);
+    public Set<Trip> findByDate(String date1, String date2) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = dateFormat.parse(date1);
+            Date endDate = dateFormat.parse(date2);
+            Set<Trip> trips = tripDAO.findByDate(startDate, endDate);
+
+            trips.stream()
+                    .map(Mapper::tripToDTO)
+                    .toList();
+
+            return trips;
     }
 
     @Override

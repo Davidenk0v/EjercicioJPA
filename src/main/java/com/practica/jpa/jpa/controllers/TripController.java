@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public class TripController {
     private TripService service;
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllMeTrips() {
+    public ResponseEntity<?> getAllTrips() {
         List<Trip> trips = service.findAll();
         if (trips.isEmpty()) {
             return new ResponseEntity<>("Trips not found", HttpStatus.NOT_FOUND);
@@ -51,9 +52,9 @@ public class TripController {
         return new ResponseEntity<>("Trip does not exist.", HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/destination/{idDestination}")
-    public ResponseEntity<?> getByDestination(@PathVariable Long idDestination){
-        Set<Trip> trips = service.findByDestination(idDestination);
+    @GetMapping("/destination/{destination}")
+    public ResponseEntity<?> getByDestination(@PathVariable String destination){
+        Set<Trip> trips = service.findByDestination(destination);
 
         if(trips.isEmpty()){
             return new ResponseEntity<>("Trips with that destination number does not exist.", HttpStatus.NOT_FOUND);
@@ -68,7 +69,7 @@ public class TripController {
 
     @GetMapping("/boat-master/{masterId}")
     public ResponseEntity<?> getByBoatMaster(@PathVariable Long masterId){
-        Set<Trip> trips = service.findByDestination(masterId);
+        Set<Trip> trips = service.findByMaster(masterId);
 
         if(trips.isEmpty()){
             return new ResponseEntity<>("Trips with that boat master does not exist.", HttpStatus.NOT_FOUND);
@@ -82,17 +83,12 @@ public class TripController {
     }
 
     @GetMapping("/date/{date1}/{date2}")
-    public ResponseEntity<?> getByDate(@PathVariable Date date1, Date date2){
+    public ResponseEntity<?> getByDate(@PathVariable String date1, @PathVariable String date2) throws ParseException {
         Set<Trip> trips = service.findByDate(date1, date2);
 
         if(trips.isEmpty()){
             return new ResponseEntity<>("There is no trip between these dates.", HttpStatus.NOT_FOUND);
         }
-
-        trips.stream()
-                .map(Mapper::tripToDTO)
-                .toList();
-
         return new ResponseEntity<>(trips, HttpStatus.OK);
     }
 
