@@ -10,13 +10,13 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface ShipService {
-    List<Ship> findAll();
-    Optional<Ship> findById(Long id);
-    Optional<Ship> findByTieNum(Integer tieNum);
-    Set<Ship> filterByTiePrice(BigDecimal lower, BigDecimal higher);
-    Set<Ship> findByTrip(Long idTrip);
-    Set<Ship> findByOwner(Long idOwner);
+    ResponseEntity<?> findAll();
+    ResponseEntity<?> findById(Long id);
+    ResponseEntity<?> findByTieNum(Integer tieNum);
+    ResponseEntity<?> filterByFeedPrice(BigDecimal lower, BigDecimal higher);
+    ResponseEntity<?> findByTrip(Long idTrip);
+    ResponseEntity<?> findByOwner(Long idOwner);
     ResponseEntity<String> update(Long id, ShipDTO ship);
     void save(Ship ship);
-    void deleteById(Long id);
+    ResponseEntity<String> deleteById(Long id);
 }

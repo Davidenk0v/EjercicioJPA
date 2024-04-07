@@ -9,12 +9,10 @@ import java.util.Optional;
 
 public interface MemberService {
 
-    List<Member> findAll();
-
-    public void addMember(Member member);
-    Optional<Member> findById(Long id);
-    Optional<Member> findByShip(Long idShip);
+    ResponseEntity<?> findAll();
+    ResponseEntity<?> findById(Long id);
+    ResponseEntity<?> findByShip(Long idShip);
     ResponseEntity<String> update(Long id, MemberDTO memberDTO);
     void save(Member member);
-    void deleteById(Long id);
+    ResponseEntity<String> deleteById(Long id);
 }

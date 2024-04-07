@@ -1,5 +1,6 @@
 package com.practica.jpa.jpa.services.impl;
 
+import com.practica.jpa.jpa.Mapper;
 import com.practica.jpa.jpa.models.Ship;
 import com.practica.jpa.jpa.models.dto.ShipDTO;
 import com.practica.jpa.jpa.persistence.ShipDAO;
@@ -14,39 +15,84 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.practica.jpa.jpa.Mapper.shipToDTO;
+
 @Component
 public class ShipServiceImpl implements ShipService {
 
     @Autowired
     private ShipDAO shipDAO;
     @Override
-    public List<Ship> findAll() {
-        return shipDAO.findAll();
+    public ResponseEntity<?> findAll() {
+        List<Ship> ships = shipDAO.findAll();
+        if(ships.isEmpty()){
+            return new ResponseEntity<>("Ships not found", HttpStatus.NOT_FOUND);
+        }
+
+        ships.stream()
+                .map(Mapper::shipToDTO)
+                .toList();
+
+        return new ResponseEntity<>(ships, HttpStatus.OK);
     }
 
     @Override
-    public Optional<Ship> findById(Long id) {
-        return shipDAO.findById(id);
+    public ResponseEntity<?> findById(Long id) {
+        Optional<Ship> optionalShip = shipDAO.findById(id);
+
+        if(optionalShip.isPresent()){
+            Ship ship = optionalShip.get();
+
+            ShipDTO shipDTO = shipToDTO(ship);
+
+            return new ResponseEntity<>(shipDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Ship does not exist.", HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public Optional<Ship> findByTieNum(Integer tieNum) {
-        return shipDAO.findByTieNum(tieNum);
+    public ResponseEntity<?> findByTieNum(Integer tieNum) {
+
+        Optional<Ship> optionalShip = shipDAO.findByTieNum(tieNum);
+
+        if(optionalShip.isPresent()){
+            Ship ship = optionalShip.get();
+
+            ShipDTO shipDTO = shipToDTO(ship);
+
+            return new ResponseEntity<>(shipDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Ship with that tien number does not exist.", HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public Set<Ship> filterByTiePrice(BigDecimal lower, BigDecimal higher) {
-        return shipDAO.filterByFeedPrice(lower, higher);
+    public ResponseEntity<?> filterByFeedPrice(BigDecimal lower, BigDecimal higher) {
+        Set<Ship> ships = shipDAO.filterByFeedPrice(lower, higher);
+        if(ships.isEmpty()){
+            return new ResponseEntity<>("There are no feeds in this range", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(ships, HttpStatus.OK);
     }
 
     @Override
-    public Set<Ship> findByTrip(Long idTrip) {
-        return shipDAO.findByTrip(idTrip);
+    public ResponseEntity<?> findByTrip(Long idTrip) {
+        Set<Ship> ships = shipDAO.findByOwner(idTrip);
+        if(ships.isEmpty()){
+            return new ResponseEntity<>("No ships were found for this destination", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(ships, HttpStatus.OK);
     }
 
     @Override
-    public Set<Ship> findByOwner(Long idOwner) {
-        return shipDAO.findByOwner(idOwner);
+    public ResponseEntity<?> findByOwner(Long idOwner) {
+        Set<Ship> ships = shipDAO.findByOwner(idOwner);
+        if(ships.isEmpty()){
+            return new ResponseEntity<>("No ships were found for this member", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(ships, HttpStatus.OK);
     }
 
     @Override
@@ -74,7 +120,13 @@ public class ShipServiceImpl implements ShipService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        shipDAO.deleteById(id);
+    public ResponseEntity<String> deleteById(Long id) {
+        Optional<Ship> optionalShip = shipDAO.findById(id);
+
+        if(optionalShip.isPresent()){
+            shipDAO.deleteById(id);
+            return new ResponseEntity<>("Ship removed successfully.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Ship does not exist", HttpStatus.BAD_REQUEST);
     }
 }

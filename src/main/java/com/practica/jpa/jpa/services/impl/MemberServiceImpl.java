@@ -1,5 +1,6 @@
 package com.practica.jpa.jpa.services.impl;
 
+import com.practica.jpa.jpa.Mapper;
 import com.practica.jpa.jpa.models.Member;
 import com.practica.jpa.jpa.models.dto.MemberDTO;
 import com.practica.jpa.jpa.persistence.MemberDAO;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+import static com.practica.jpa.jpa.Mapper.memberToDTO;
+
 @Component
 public class MemberServiceImpl implements MemberService {
 
@@ -20,20 +23,44 @@ public class MemberServiceImpl implements MemberService {
     private MemberDAO memberDAO;
 
     @Override
-    public void addMember(Member member){ memberDAO.addMember(member);}
-    @Override
-    public List<Member> findAll() {
-        return memberDAO.findAll();
+    public ResponseEntity<?> findAll() {
+        List<Member> members = memberDAO.findAll();
+        if(members.isEmpty()){
+            return new ResponseEntity<>("Members not found", HttpStatus.NOT_FOUND);
+        }
+        members.stream()
+                .map(Mapper::memberToDTO)
+                .toList();
+
+        return new ResponseEntity<>(members, HttpStatus.OK);
     }
 
     @Override
-    public Optional<Member> findById(Long id) {
-        return memberDAO.findById(id);
+    public ResponseEntity<?> findById(Long id) {
+        Optional<Member> optionalMember = memberDAO.findById(id);
+
+        if(optionalMember.isPresent()){
+            Member member = optionalMember.get();
+
+            MemberDTO memberDTO = memberToDTO(member);
+
+            return new ResponseEntity<>(memberDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Member does not exist.", HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public Optional<Member> findByShip(Long idShip) {
-        return memberDAO.findByShip(idShip);
+    public ResponseEntity<?> findByShip(Long idShip) {
+        Optional<Member> optionalMember = memberDAO.findByShip(idShip);
+
+        if(optionalMember.isPresent()){
+            Member member = optionalMember.get();
+
+            MemberDTO memberDTO = memberToDTO(member);
+
+            return new ResponseEntity<>(memberDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Member does not exist.", HttpStatus.NOT_FOUND);
     }
 
     @Override
@@ -57,7 +84,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        memberDAO.deleteById(id);
+    public ResponseEntity<String> deleteById(Long id) {
+        Optional<Member> optionalMember = memberDAO.findById(id);
+
+        if(optionalMember.isPresent()){
+            memberDAO.deleteById(id);
+            return new ResponseEntity<>("Member removed successfully.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Member does not exist", HttpStatus.BAD_REQUEST);
     }
 }

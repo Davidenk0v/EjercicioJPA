@@ -28,75 +28,33 @@ public class ShipController {
     //GETS
     @GetMapping("/")
     public ResponseEntity<?> getAllShips(){
-        List<Ship> ships = service.findAll();
-        if(ships.isEmpty()){
-            return new ResponseEntity<>("Ships not found", HttpStatus.NOT_FOUND);
-        }
-
-        ships.stream()
-                .map(Mapper::shipToDTO)
-                .toList();
-
-        return new ResponseEntity<>(ships, HttpStatus.OK);
+        return service.findAll();
     }
 
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id){
-        Optional<Ship> optionalShip = service.findById(id);
-
-        if(optionalShip.isPresent()){
-            Ship ship = optionalShip.get();
-
-            ShipDTO shipDTO = shipToDTO(ship);
-
-            return new ResponseEntity<>(shipDTO, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Ship does not exist.", HttpStatus.NOT_FOUND);
+        return service.findById(id);
     }
 
     @GetMapping("/tie-number/{tieNum}")
     public ResponseEntity<?> getByShip(@PathVariable Integer tieNum){
-        Optional<Ship> optionalShip = service.findByTieNum(tieNum);
-
-        if(optionalShip.isPresent()){
-            Ship ship = optionalShip.get();
-
-            ShipDTO shipDTO = shipToDTO(ship);
-
-            return new ResponseEntity<>(shipDTO, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Ship with that tien number does not exist.", HttpStatus.NOT_FOUND);
+        return service.findByTieNum(tieNum);
     }
 
     @GetMapping("/feed-prices/{price1}/{price2}")
     public ResponseEntity<?> filterByFeedPrices(@PathVariable BigDecimal price1, @PathVariable BigDecimal price2){
-        Set<Ship> ships = service.filterByTiePrice(price1, price2);
-        if(ships.isEmpty()){
-            return new ResponseEntity<>("There are no feeds in this range", HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(ships, HttpStatus.OK);
+        return service.filterByFeedPrice(price1, price2);
     }
 
     @GetMapping("/owner/{idOwner}")
     public ResponseEntity<?> findByOwner(@PathVariable Long idOwner){
-        Set<Ship> ships = service.findByOwner(idOwner);
-        if(ships.isEmpty()){
-            return new ResponseEntity<>("No ships were found for this member", HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(ships, HttpStatus.OK);
+        return service.findByOwner(idOwner);
     }
 
     @GetMapping("/trip/{idTrip}")
     public ResponseEntity<?> findByTrip(@PathVariable Long idTrip){
-        Set<Ship> ships = service.findByOwner(idTrip);
-        if(ships.isEmpty()){
-            return new ResponseEntity<>("No ships were found for this destination", HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(ships, HttpStatus.OK);
+        return service.findByTrip(idTrip);
     }
 
 
@@ -108,6 +66,7 @@ public class ShipController {
         return new ResponseEntity<>("Ship added successfully", HttpStatus.CREATED);
     }
 
+    //PUT
     @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable Long id, @RequestBody ShipDTO shipDTO){
         return service.update(id, shipDTO);
@@ -116,12 +75,6 @@ public class ShipController {
     //DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteShip(@PathVariable Long id){
-        Optional<Ship> optionalShip = service.findById(id);
-
-        if(optionalShip.isPresent()){
-            service.deleteById(id);
-            return new ResponseEntity<>("Ship removed successfully.", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Ship does not exist", HttpStatus.BAD_REQUEST);
+        return service.deleteById(id);
     }
 }

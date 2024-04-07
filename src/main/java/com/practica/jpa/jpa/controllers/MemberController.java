@@ -21,68 +21,38 @@ public class MemberController {
     @Autowired
     private MemberService service;
 
+    //GETTERS
     @GetMapping("/")
     public ResponseEntity<?> getAllMembers(){
-        List<Member> members = service.findAll();
-        if(members.isEmpty()){
-            return new ResponseEntity<>("Members not found", HttpStatus.NOT_FOUND);
-        }
-
-        members.stream()
-                .map(Mapper::memberToDTO)
-                .toList();
-
-        return new ResponseEntity<>(members, HttpStatus.OK);
+        return service.findAll();
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id){
-        Optional<Member> optionalMember = service.findById(id);
-
-        if(optionalMember.isPresent()){
-            Member member = optionalMember.get();
-
-            MemberDTO memberDTO = memberToDTO(member);
-
-            return new ResponseEntity<>(memberDTO, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Member does not exist.", HttpStatus.NOT_FOUND);
+        return service.findById(id);
     }
 
     @GetMapping("/ship/{shipId}")
     public ResponseEntity<?> getByShip(@PathVariable Long shipId){
-        Optional<Member> optionalMember = service.findByShip(shipId);
-
-        if(optionalMember.isPresent()){
-            Member member = optionalMember.get();
-
-            MemberDTO memberDTO = memberToDTO(member);
-
-            return new ResponseEntity<>(memberDTO, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Member does not exist.", HttpStatus.NOT_FOUND);
+        return service.findByShip(shipId);
     }
 
+    //POTS
     @PostMapping("/")
     public ResponseEntity<String> addMember(@RequestBody Member member){
         service.save(member);
         return new ResponseEntity<>("Member added successfully", HttpStatus.CREATED);
     }
 
+    //PUT
     @PutMapping("/{id}")
     public ResponseEntity<?> updateMember(@PathVariable Long id, @RequestBody MemberDTO memberDTO){
         return service.update(id, memberDTO);
     }
 
+    //DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMember(@PathVariable Long id){
-        Optional<Member> optionalMember = service.findById(id);
-
-        if(optionalMember.isPresent()){
-            service.deleteById(id);
-            return new ResponseEntity<>("Member removed successfully.", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Member does not exist", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> deleteMember(@PathVariable Long id) {
+        return service.deleteById(id);
     }
 }
